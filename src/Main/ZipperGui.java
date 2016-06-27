@@ -6,6 +6,7 @@ import Helper.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 
 public class ZipperGui extends JFrame{
     protected static Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
@@ -17,6 +18,7 @@ public class ZipperGui extends JFrame{
     protected static JProgressBar zprogress,uzprogress;
     protected static JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home"));
     protected static Dimension bd ;
+    protected static File zfile,uzfile;
 
     public ZipperGui(){
          setSize(d.width/3,d.height/3+40);
@@ -37,6 +39,7 @@ public class ZipperGui extends JFrame{
          zbuttonpanel = new JPanel();
          zactionpanel = new JPanel();
          bd = new Dimension(100,30);
+         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
          ImageIcon img = new ImageIcon(new ImageIcon("res//zip1.png").getImage().getScaledInstance(d.width/5-82,d.height/4-30,Image.SCALE_DEFAULT));
          imagelabel= new JLabel(img);
@@ -60,7 +63,12 @@ public class ZipperGui extends JFrame{
          zippanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,2,true));
 
          zselect.addActionListener(e->{
-             fileChooser.showOpenDialog(null);
+             int r = fileChooser.showOpenDialog(null);
+             if(r == JFileChooser.APPROVE_OPTION){zfile = fileChooser.getSelectedFile();}
+         });
+
+         zip.addActionListener(e->{
+             Zipper zipp = new Zipper(zfile);
          });
     }
 
@@ -69,6 +77,7 @@ public class ZipperGui extends JFrame{
         uzbuttonpanel = new JPanel();
         uzactionpanel = new JPanel();
         bd = new Dimension(100,100);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
         ImageIcon img = new ImageIcon(new ImageIcon("res//unzip2.png").getImage().getScaledInstance(d.width/5-82,d.height/4-30,Image.SCALE_DEFAULT));
         imagelabel= new JLabel(img);
@@ -92,7 +101,12 @@ public class ZipperGui extends JFrame{
         unzippanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,2,true));
 
         uzselect.addActionListener(e->{
-            fileChooser.showOpenDialog(null);
+            int r = fileChooser.showOpenDialog(null);
+            if(r == JFileChooser.APPROVE_OPTION){uzfile = fileChooser.getSelectedFile();}
+        });
+
+        unzip.addActionListener(e->{
+
         });
     }
 
