@@ -1,6 +1,6 @@
 package Main;
 /**
- * Created by Nikhil on 16-06-2016.
+ * Created by Nikhil on 23-06-2016.
  */
 import Helper.*;
 import javax.swing.*;
@@ -11,19 +11,22 @@ public class ZipperGui extends JFrame{
     protected static Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
     protected static JPanel zippanel,zbuttonpanel,zactionpanel;
     protected static JPanel unzippanel,uzbuttonpanel,uzactionpanel;
-    protected static JButton select,zip,unzip;
+    protected static JButton zselect,uzselect,zip,unzip;
     protected static JLabel imagelabel;
     protected static JTabbedPane tabbedPane = new JTabbedPane();
     protected static JProgressBar zprogress,uzprogress;
-    protected static JFileChooser fileChooser;
+    protected static JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home"));
+    protected static Dimension bd ;
 
     public ZipperGui(){
          setSize(d.width/3,d.height/3+40);
-         try{
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-         }catch(Exception e){e.printStackTrace();}
+        try {
+            UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
+        } catch (Exception ex) {ex.printStackTrace();}
+
          setZippanel();
          setUnzippanel();
+
          tabbedPane.addTab("Zipper",zippanel);
          tabbedPane.addTab("UnZipper",unzippanel);
          add(tabbedPane,BorderLayout.CENTER);
@@ -33,17 +36,18 @@ public class ZipperGui extends JFrame{
          zippanel = new JPanel();
          zbuttonpanel = new JPanel();
          zactionpanel = new JPanel();
+         bd = new Dimension(100,30);
 
          ImageIcon img = new ImageIcon(new ImageIcon("res//zip1.png").getImage().getScaledInstance(d.width/5-82,d.height/4-30,Image.SCALE_DEFAULT));
          imagelabel= new JLabel(img);
 
          zbuttonpanel.setLayout(new GridBagLayout());
-         zbuttonpanel.add(select = new JButton("Select File"),new GBC(0,0).setInsets(10,10,10,10));
-         zbuttonpanel.add(zip = new JButton("Zip Selected File"),new GBC(0,1).setInsets(10,10,10,10));
+         zbuttonpanel.add(zselect = new JButton("        Select File       "),new GBC(0,0).setInsets(10,10,10,10));
+         zbuttonpanel.add(zip = new JButton("  Zip Selected File  "),new GBC(0,1).setInsets(10,10,10,10));
          zbuttonpanel.setBorder(BorderFactory.createTitledBorder("Zipper"));
          zbuttonpanel.setPreferredSize(new Dimension(d.width/6-60,d.height/4-30));
-         select.setPreferredSize(new Dimension(200,40));
-         zip.setPreferredSize(new Dimension(200,40));
+         zselect.setMargin(new Insets(5,65,5,35));
+         zip.setMargin(new Insets(5,19,5,19));
 
          zactionpanel.add(zprogress = new JProgressBar(SwingConstants.HORIZONTAL));
          zactionpanel.setBorder(BorderFactory.createTitledBorder("Zipping Status"));
@@ -54,23 +58,28 @@ public class ZipperGui extends JFrame{
          zippanel.add(zbuttonpanel,new GBC(1,0));
          zippanel.add(zactionpanel,new GBC(0,1,2,1));
          zippanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,2,true));
+
+         zselect.addActionListener(e->{
+             fileChooser.showOpenDialog(null);
+         });
     }
 
     public static void setUnzippanel(){
         unzippanel = new JPanel();
         uzbuttonpanel = new JPanel();
         uzactionpanel = new JPanel();
+        bd = new Dimension(100,100);
 
         ImageIcon img = new ImageIcon(new ImageIcon("res//unzip2.png").getImage().getScaledInstance(d.width/5-82,d.height/4-30,Image.SCALE_DEFAULT));
         imagelabel= new JLabel(img);
 
         uzbuttonpanel.setLayout(new GridBagLayout());
-        uzbuttonpanel.add(select = new JButton("Select File"),new GBC(0,0).setInsets(10,10,10,10));
-        uzbuttonpanel.add(unzip = new JButton("UnZip Selected File"),new GBC(0,1).setInsets(10,10,10,10));
+        uzbuttonpanel.add(uzselect = new JButton("         Select File           "),new GBC(0,0).setInsets(10,10,10,10));
+        uzbuttonpanel.add(unzip = new JButton("  UnZip Selected File  "),new GBC(0,1).setInsets(10,10,10,10));
         uzbuttonpanel.setBorder(BorderFactory.createTitledBorder("UnZipper"));
         uzbuttonpanel.setPreferredSize(new Dimension(d.width/6-60,d.height/4-30));
-        select.setPreferredSize(new Dimension(200,40));
-        unzip.setPreferredSize(new Dimension(200,40));
+        uzselect.setMargin(new Insets(5,35,5,35));
+        unzip.setMargin(new Insets(5,10,5,10));
 
         uzactionpanel.add(uzprogress = new JProgressBar(SwingConstants.HORIZONTAL));
         uzactionpanel.setBorder(BorderFactory.createTitledBorder("Unzipping Status"));
@@ -81,6 +90,10 @@ public class ZipperGui extends JFrame{
         unzippanel.add(uzbuttonpanel,new GBC(1,0));
         unzippanel.add(uzactionpanel,new GBC(0,1,2,1));
         unzippanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,2,true));
+
+        uzselect.addActionListener(e->{
+            fileChooser.showOpenDialog(null);
+        });
     }
 
     public static void main(String args[]){
