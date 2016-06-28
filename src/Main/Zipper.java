@@ -14,23 +14,19 @@ import java.util.*;
 
 public class Zipper {
     private static File tozip;
-    private String name,parent,currentpath,zippath,zipath;
+    private String currentpath,zippath;
     Calendar calendar = Calendar.getInstance();
     long millisecs = calendar.getTime().getTime();
 
     public Zipper(File file){
         tozip = file;
-        parent = tozip.getParent();
-        name = tozip.getName().substring(0,tozip.getName().lastIndexOf('.'))+".zip";
         currentpath = tozip.getAbsolutePath();
-        zippath = parent+name;
-
-        zipath = currentpath+ "_" + millisecs + ".zip";
+        zippath = currentpath+ "_" + millisecs + ".zip";
     }
 
     public   void zipFunction() {
         try {
-            ZipFile zipFile = new ZipFile(zipath);
+            ZipFile zipFile = new ZipFile(zippath);
             File inputFileH = new File(currentpath);
             ZipParameters parameters = new ZipParameters();
 
@@ -48,7 +44,7 @@ public class Zipper {
             zipFile.addFile(inputFileH, parameters);
 
             long uncompressedSize = inputFileH.length();
-            File outputFileH = new File(zipath);
+            File outputFileH = new File(zippath);
             long comrpessedSize = outputFileH.length();
 
             //System.out.println("Size "+uncompressedSize+" vs "+comrpessedSize);

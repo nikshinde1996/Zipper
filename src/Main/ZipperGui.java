@@ -107,7 +107,8 @@ public class ZipperGui extends JFrame{
         });
 
         unzip.addActionListener(e->{
-
+             UnZipper unzipp = new UnZipper(uzfile);
+             unzipp.UnZipperFucntion();
         });
     }
 
