@@ -69,7 +69,11 @@ public class ZipperGui extends JFrame{
 
          zip.addActionListener(e->{
              Zipper zipp = new Zipper(zfile);
-             zipp.zipFunction();
+             try {
+                 zipp.zipFunction(zipp);
+             }catch(IOException r){
+
+             }
          });
     }
 

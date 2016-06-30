@@ -24,34 +24,42 @@ public class Zipper {
         zippath = currentpath+ "_" + millisecs + ".zip";
     }
 
-    public   void zipFunction() {
-        try {
-            ZipFile zipFile = new ZipFile(zippath);
-            File inputFileH = new File(currentpath);
-            ZipParameters parameters = new ZipParameters();
+    public  void zipFunction(Zipper z) throws IOException {
+        FileOutputStream fos = new FileOutputStream(zippath);
+        ZipOutputStream zos = new ZipOutputStream(fos);
+        z.addDirToZipArchive(zos,new File(currentpath),null);
+        zos.flush();
+        fos.flush();
+        zos.close();
+        fos.close();
+    }
 
-            // COMP_DEFLATE is for compression
-            // COMp_STORE no compression
-            parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
-            // DEFLATE_LEVEL_ULTRA = maximum compression
-            // DEFLATE_LEVEL_MAXIMUM
-            // DEFLATE_LEVEL_NORMAL = normal compression
-            // DEFLATE_LEVEL_FAST
-            // DEFLATE_LEVEL_FASTEST = fastest compression
-            parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_ULTRA);
+    public void addDirToZipArchive(ZipOutputStream zos,File fileToZip,String ParentDir) throws IOException{
+          if(fileToZip==null || !fileToZip.exists()){
+              return;
+          }
 
-            // file compressed
-            zipFile.addFile(inputFileH, parameters);
+          String zipEntryName = fileToZip.getName();
 
-            long uncompressedSize = inputFileH.length();
-            File outputFileH = new File(zippath);
-            long comrpessedSize = outputFileH.length();
-
-            //System.out.println("Size "+uncompressedSize+" vs "+comrpessedSize);
-            double ratio = (double)comrpessedSize/(double)uncompressedSize;
-            System.out.println("File compressed with compression ratio : "+ ratio);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (ParentDir != null && !ParentDir.isEmpty()) {
+            zipEntryName = ParentDir + "//" +fileToZip.getName();
         }
-    }}
+
+        if(fileToZip.isDirectory()){
+            for(File f:fileToZip.listFiles()){
+                addDirToZipArchive(zos,f,zipEntryName);
+            }
+        }else{
+            byte[] buffer = new byte[1024];
+            FileInputStream fis = new FileInputStream(fileToZip);
+            zos.putNextEntry(new ZipEntry(zipEntryName));
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                zos.write(buffer, 0, length);
+            }
+            zos.closeEntry();
+            fis.close();
+        }
+    }
+
+}
