@@ -54,7 +54,7 @@ public class ZipperGui extends JFrame{
 
          zactionpanel.add(zprogress = new JProgressBar(SwingConstants.HORIZONTAL));
          zactionpanel.setBorder(BorderFactory.createTitledBorder("Zipping Status"));
-         zprogress.setPreferredSize(new Dimension(360,20));
+         zprogress.setPreferredSize(new Dimension(360,20));zprogress.setValue(0);
 
          zippanel.setLayout(new GridBagLayout());
          zippanel.add(imagelabel,new GBC(0,0));
@@ -97,7 +97,7 @@ public class ZipperGui extends JFrame{
 
         uzactionpanel.add(uzprogress = new JProgressBar(SwingConstants.HORIZONTAL));
         uzactionpanel.setBorder(BorderFactory.createTitledBorder("Unzipping Status"));
-        uzprogress.setPreferredSize(new Dimension(360,20));
+        uzprogress.setPreferredSize(new Dimension(360,20)); uzprogress.setValue(0);
 
         unzippanel.setLayout(new GridBagLayout());
         unzippanel.add(imagelabel,new GBC(0,0));

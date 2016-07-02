@@ -6,17 +6,22 @@ import net.lingala.zip4j.core.*;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.model.*;
 import net.lingala.zip4j.util.*;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.nio.file.Path;
 import java.util.zip.*;
 import java.io.*;
 import java.nio.*;
 import java.util.*;
 
-public class Zipper {
+public class Zipper extends  SwingWorker<Void,Void> implements PropertyChangeListener{
     private static File tozip;
     private String currentpath,zippath;
     Calendar calendar = Calendar.getInstance();
     long millisecs = calendar.getTime().getTime();
+    private ZipperGui zgui = new ZipperGui();
 
     public Zipper(File file){
         tozip = file;
@@ -32,13 +37,13 @@ public class Zipper {
         fos.flush();
         zos.close();
         fos.close();
+        execute();
     }
 
     public void addDirToZipArchive(ZipOutputStream zos,File fileToZip,String ParentDir) throws IOException{
           if(fileToZip==null || !fileToZip.exists()){
               return;
           }
-
           String zipEntryName = fileToZip.getName();
 
         if (ParentDir != null && !ParentDir.isEmpty()) {
@@ -62,4 +67,25 @@ public class Zipper {
         }
     }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
+    }
+
+    @Override
+    protected Void doInBackground() throws Exception {
+        int progress = 0;
+        Random r = new Random();
+        try{
+            Thread.sleep(1000);
+        }catch (InterruptedException e){}
+        progress+=r.nextInt(5);
+        zgui.zprogress.setValue(Math.min(progress,100));
+        return null;
+    }
+
+    protected void done(){
+        JOptionPane.showMessageDialog(null,"Zipping Done");
+    }
 }
+
