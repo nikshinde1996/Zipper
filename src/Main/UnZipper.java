@@ -11,28 +11,8 @@ import java.util.zip.*;
 import java.io.*;
 import java.nio.*;
 import java.util.*;
+import javax.swing.*;
 
-public class UnZipper {
-    private static File tounzip;
-    private String name,currentpath,unzippath,parent;
+public class UnZipper extends JPanel{
 
-    public UnZipper(File file){
-         tounzip = file;
-         parent = file.getParent();
-         unzippath = parent + tounzip.getName().substring(0,tounzip.getName().lastIndexOf("."));
-    }
-
-    public  void UnZipperFucntion() {
-        try {
-            ZipFile zipFile = new ZipFile(tounzip);
-            if (zipFile.isEncrypted()) {
-                //zipFile.setPassword(password);
-            }
-            zipFile.extractAll(unzippath);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("File Decompressed");
-    }
 }

@@ -2,90 +2,72 @@ package Main;
 /**
  * Created by Nikhil on 25-06-2016.
  */
+import com.sun.deploy.panel.JavaPanel;
+import com.sun.deploy.ref.Helpers;
+import com.sun.org.apache.xpath.internal.operations.String;
 import net.lingala.zip4j.core.*;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.model.*;
 import net.lingala.zip4j.util.*;
+import com.sun.xml.internal.ws.api.server.Adapter;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
 
+import Helper.*;
 import javax.swing.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.*;
 import java.nio.file.Path;
 import java.util.zip.*;
 import java.io.*;
 import java.nio.*;
 import java.util.*;
 
-public class Zipper extends  SwingWorker<Void,Void> implements PropertyChangeListener{
-    private static File tozip;
-    private String currentpath,zippath;
-    Calendar calendar = Calendar.getInstance();
-    long millisecs = calendar.getTime().getTime();
-    private ZipperGui zgui = new ZipperGui();
+import static Helper.Zip4jParameter.*;
 
-    public Zipper(File file){
-        tozip = file;
-        currentpath = tozip.getAbsolutePath();
-        zippath = currentpath+ "_" + millisecs + ".zip";
-    }
+public class Zipper extends JPanel{
+     public static JPanel urlpanel ,progresspanel,buttonpanel;
+     private static JButton selectFile;
+     private static JTextArea selectedurl ;
+     private static ZipFile zipFile;
+     private static Zip4jConstants zip4jConstants;
+     private static JComboBox<Object> compressiontype;
+     private static JProgressBar zippingprogress = new JProgressBar();
+     private static JLabel imagelabel,status = new JLabel();
 
-    public  void zipFunction(Zipper z) throws IOException {
-        FileOutputStream fos = new FileOutputStream(zippath);
-        ZipOutputStream zos = new ZipOutputStream(fos);
-        z.addDirToZipArchive(zos,new File(currentpath),null);
-        zos.flush();
-        fos.flush();
-        zos.close();
-        fos.close();
-        execute();
-    }
+     public Zipper(){
+          setBackground(Color.WHITE);
+          setUrlpanel();
+          setButtonPanel();
+          setProgressbar();
+          setLayout(new GridBagLayout());
 
-    public void addDirToZipArchive(ZipOutputStream zos,File fileToZip,String ParentDir) throws IOException{
-          if(fileToZip==null || !fileToZip.exists()){
-              return;
-          }
-          String zipEntryName = fileToZip.getName();
+         add(urlpanel, new GBC(0,0));
+         add(buttonpanel,new GBC(0,1).setFill(GBC.BOTH));
+         add(progresspanel,new GBC(0,2).setFill(GBC.BOTH));
 
-        if (ParentDir != null && !ParentDir.isEmpty()) {
-            zipEntryName = ParentDir + "//" +fileToZip.getName();
-        }
+     }
 
-        if(fileToZip.isDirectory()){
-            for(File f:fileToZip.listFiles()){
-                addDirToZipArchive(zos,f,zipEntryName);
-            }
-        }else{
-            byte[] buffer = new byte[1024];
-            FileInputStream fis = new FileInputStream(fileToZip);
-            zos.putNextEntry(new ZipEntry(zipEntryName));
-            int length;
-            while ((length = fis.read(buffer)) > 0) {
-                zos.write(buffer, 0, length);
-            }
-            zos.closeEntry();
-            fis.close();
-        }
-    }
+     public static void setUrlpanel(){
+         urlpanel = new JPanel();
+         urlpanel.add(selectedurl = new JTextArea(2,35));
+         selectedurl.setEditable(false);selectedurl.setToolTipText("Selcted file url");
+         selectedurl.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+         urlpanel.add(selectFile = new JButton("..."));
+         selectFile.setPreferredSize(new Dimension(100,32));
+     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+     public static void setButtonPanel(){
+         buttonpanel = new JPanel();
+         buttonpanel.setPreferredSize(new Dimension(ZipperGui.d.width/3-70,250));
+     }
 
-    }
-
-    @Override
-    protected Void doInBackground() throws Exception {
-        int progress = 0;
-        Random r = new Random();
-        try{
-            Thread.sleep(1000);
-        }catch (InterruptedException e){}
-        progress+=r.nextInt(5);
-        zgui.zprogress.setValue(Math.min(progress,100));
-        return null;
-    }
-
-    protected void done(){
-        JOptionPane.showMessageDialog(null,"Zipping Done");
-    }
+     public static void setProgressbar(){
+         progresspanel = new JPanel(); 
+         progresspanel.add(zippingprogress,BorderLayout.CENTER);
+         zippingprogress.setPreferredSize(new Dimension(ZipperGui.d.width/3-70,20));
+         progresspanel.setBorder(BorderFactory.createEmptyBorder());
+     }
 }
 
