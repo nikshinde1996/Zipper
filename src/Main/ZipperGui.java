@@ -31,7 +31,7 @@ public class ZipperGui extends JFrame{
 
 
         panel.add(new Zipper(),BorderLayout.CENTER);
-        panel.setBorder(BorderFactory.createLineBorder(Color.green,4));
+        panel.setBorder(BorderFactory.createLineBorder(Color.blue,4));
 
         add(panel,BorderLayout.CENTER);
         Helper.SetBGColor s = new SetBGColor(Color.WHITE);
@@ -44,6 +44,7 @@ public class ZipperGui extends JFrame{
                 obj.setVisible(true);
                 obj.setLocationRelativeTo(null);
                 obj.setIconImage(new ImageIcon("res//zipicon.png").getImage());
+                obj.setTitle("Zipper");
             }
         });
     }
