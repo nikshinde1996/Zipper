@@ -40,16 +40,16 @@ public class Zipper extends JPanel implements PropertyChangeListener{
      private static JProgressBar zippingprogress = new JProgressBar(0,100);
      private static JLabel status = new JLabel();
      private static JFileChooser chooser;
-     private static String filepath = "",comp_level="",zippath = "";
+     private static String filepath = "",comp_level="AES_STRENGTH_128",zippath = "";
      private static JTextArea statust = new JTextArea();
      private static net.lingala.zip4j.progress.ProgressMonitor progressMonitor = new ProgressMonitor();
      private static JScrollPane selectedfile;
      protected static String gaps = "    ";
      protected static String status1 = "File not Selected ";
      protected static String status2 = "File Item Selected ";
-     protected static String status3 = "Zipping Selected Item .";
+     protected static String status3 = "Zipping Selected Item ...";
      protected static String status5 = "Zipping Selected Item ..";
-     protected static String status6 = "Zipping Selected Item ...";
+     protected static String status6 = "Zipping Selected Item .";
      protected static String status4 = "Zipping Done Successfully";
 
      public Zipper(){
@@ -120,7 +120,34 @@ public class Zipper extends JPanel implements PropertyChangeListener{
      //         ZipTask task = new ZipTask();
       //        task.addPropertyChangeListener(null);
        //       task.execute();
-                zipfi();
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                       try{
+                           statust.setText(status3);
+                           ZipFile zipFile = new ZipFile(zippath);
+                           File inputFileH = new File(filepath);
+                           ZipParameters parameters = new ZipParameters();
+                           progressMonitor = zipFile.getProgressMonitor();
+                           progressMonitor.setPercentDone(progressMonitor.getPercentDone());
+                           parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_ULTRA);
+                           zipFile.createZipFileFromFolder(filepath,parameters,true,78237482);
+
+                           long uncompressedSize = inputFileH.length();
+                           File outputFileH = new File(zippath);
+                           long comrpessedSize = outputFileH.length();
+
+                           statust.setText(status4);
+                           Thread.sleep(10000);
+                           statust.setText(status1);
+                           selectedurl.setText("");
+                       }catch(Exception e){
+                            JOptionPane.showMessageDialog(null,e);
+                       }
+                    }
+                });
+                t.start();
          });
      }
 
@@ -155,7 +182,7 @@ public class Zipper extends JPanel implements PropertyChangeListener{
 
                 parameter1.setCompressionLevel(Zip4jParameter.parameters.get(comp_level));
                 zipF.createZipFile(inputfile,parameter1);
-
+                zipF.getProgressMonitor();
             }catch(Exception e){
 
             }
@@ -172,7 +199,7 @@ public class Zipper extends JPanel implements PropertyChangeListener{
             ZipFile zipF = new ZipFile(zippath);
             File inputfile = new File(filepath);
             ZipParameters parameter1 = new ZipParameters();
-
+            zipF.getProgressMonitor();
             parameter1.setCompressionLevel(Zip4jParameter.parameters.get(comp_level));
             zipF.createZipFile(inputfile,parameter1);
 
