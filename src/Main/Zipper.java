@@ -35,6 +35,7 @@ public class Zipper extends JPanel implements PropertyChangeListener{
      private static JButton selectFile,zipfile;
      private static JTextArea selectedurl ;
      private static ZipFile zipFile;
+     private static ZipParameters parameters;
      private static Zip4jConstants zip4jConstants;
      private static JComboBox<String> compressiontype;
      private static JProgressBar zippingprogress = new JProgressBar(0,100);
@@ -98,13 +99,13 @@ public class Zipper extends JPanel implements PropertyChangeListener{
          ImageIcon imageIcon = new ImageIcon(new ImageIcon("res//zip3.png").getImage().getScaledInstance(200,180, Image.SCALE_DEFAULT));
          JLabel text,ilabel = new JLabel();
          ilabel.setIcon(imageIcon);
-         zipfile = new JButton(new ImageIcon(new ImageIcon("res//bimg1.png").getImage().getScaledInstance(155,80, Image.SCALE_DEFAULT)));
+         zipfile = new JButton(new ImageIcon(new ImageIcon("res//bimg2.png").getImage().getScaledInstance(155,80, Image.SCALE_DEFAULT)));
          zipfile.setContentAreaFilled(false);zipfile.setFocusPainted(true);
 
          bpanel = new JPanel(new GridBagLayout());
          bpanel.add(text = new JLabel("*Select Compression Level"),new GBC(0,0).setInsets(3));text.setFont(new Font("Serif", Font.BOLD, 16));
          bpanel.add(compressiontype,new GBC(0,1).setInsets(10,5,5,5));compressiontype.setPreferredSize(new Dimension(200,20));
-         bpanel.add(zipfile,new GBC(0,2).setInsets(10,5,10,5));zipfile.setPreferredSize(new Dimension(50,20));
+         bpanel.add(zipfile,new GBC(0,2).setInsets(20,5,10,5));zipfile.setPreferredSize(new Dimension(50,10));
          imagep.add(ilabel,BorderLayout.CENTER);
 
          buttonpanel.add(imagep,BorderLayout.WEST);
@@ -113,41 +114,97 @@ public class Zipper extends JPanel implements PropertyChangeListener{
 
          compressiontype.addActionListener(e->{
              comp_level = compressiontype.getSelectedItem().toString();
-             System.out.println(comp_level);
          });
 
          zipfile.addActionListener(e->{
-     //         ZipTask task = new ZipTask();
-      //        task.addPropertyChangeListener(null);
-       //       task.execute();
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+              if(new File(filepath).isDirectory()){
 
-                       try{
-                           statust.setText(status3);
-                           ZipFile zipFile = new ZipFile(zippath);
-                           File inputFileH = new File(filepath);
-                           ZipParameters parameters = new ZipParameters();
-                           progressMonitor = zipFile.getProgressMonitor();
-                           progressMonitor.setPercentDone(progressMonitor.getPercentDone());
-                           parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_ULTRA);
-                           zipFile.createZipFileFromFolder(filepath,parameters,true,78237482);
+                  Thread t = new Thread(new Runnable() {
+                      @Override
+                      public void run() {
 
-                           long uncompressedSize = inputFileH.length();
-                           File outputFileH = new File(zippath);
-                           long comrpessedSize = outputFileH.length();
+                          try{
 
-                           statust.setText(status4);
-                           Thread.sleep(10000);
-                           statust.setText(status1);
-                           selectedurl.setText("");
-                       }catch(Exception e){
-                            JOptionPane.showMessageDialog(null,e);
-                       }
-                    }
-                });
-                t.start();
+                              zipFile = new ZipFile(zippath);
+                              File inputFileH = new File(filepath);
+                              parameters = new ZipParameters();
+                              progressMonitor = zipFile.getProgressMonitor();
+                              progressMonitor.setPercentDone(progressMonitor.getPercentDone());
+                              parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_ULTRA);
+                              statust.setText(status3);
+                              zipFile.createZipFileFromFolder(filepath,parameters,true,78237482);
+
+                              long uncompressedSize = inputFileH.length();
+                              File outputFileH = new File(zippath);
+                              long comrpessedSize = outputFileH.length();
+
+                              statust.setText(status4);
+                              Thread.sleep(10000);
+                              statust.setText(status1);
+                              selectedurl.setText("");
+                          }catch(Exception e){
+                              JOptionPane.showMessageDialog(null,e);
+                              statust.setText(status1);
+                          }
+                      }
+                  });
+
+                  Thread timer = new Thread(new Runnable() {
+                      @Override
+                      public void run() {
+                          int progress = progressMonitor.getPercentDone();
+                          zippingprogress.setValue(progress);
+                      }
+                  });
+
+                  t.start();
+                  timer.start();
+
+              }else if(new File(filepath).isFile()){
+
+
+                  Thread t = new Thread(new Runnable() {
+                      @Override
+                      public void run() {
+
+                          try{
+
+                              zipFile = new ZipFile(zippath);
+                              File inputFileH = new File(filepath);
+                              parameters = new ZipParameters();
+                              progressMonitor = zipFile.getProgressMonitor();
+                              progressMonitor.setPercentDone(progressMonitor.getPercentDone());
+                              parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_ULTRA);
+                              statust.setText(status3);
+                              zipFile.createZipFile(new File(filepath),parameters,true,78237482);
+
+                              long uncompressedSize = inputFileH.length();
+                              File outputFileH = new File(zippath);
+                              long comrpessedSize = outputFileH.length();
+
+                              statust.setText(status4);
+                              Thread.sleep(10000);
+                              statust.setText(status1);
+                              selectedurl.setText("");
+                          }catch(Exception e){
+                              JOptionPane.showMessageDialog(null,e);
+                              statust.setText(status1);
+                          }
+                      }
+                  });
+
+                  Thread timer = new Thread(new Runnable() {
+                      @Override
+                      public void run() {
+                          int progress = progressMonitor.getPercentDone();
+                          zippingprogress.setValue(progress);
+                      }
+                  });
+
+                  t.start();
+                  timer.start();
+
+              }
          });
      }
 
@@ -172,27 +229,7 @@ public class Zipper extends JPanel implements PropertyChangeListener{
 
     }
 
-    static class ZipTask extends SwingWorker<Void,Void>{
-        @Override
-        protected Void doInBackground() throws Exception {
-            try{
-                ZipFile zipF = new ZipFile(zippath);
-                File inputfile = new File(filepath);
-                ZipParameters parameter1 = new ZipParameters();
 
-                parameter1.setCompressionLevel(Zip4jParameter.parameters.get(comp_level));
-                zipF.createZipFile(inputfile,parameter1);
-                zipF.getProgressMonitor();
-            }catch(Exception e){
-
-            }
-            return null;
-        }
-
-        public void done(){
-
-        }
-    }
 
     public static void zipfi(){
         try{

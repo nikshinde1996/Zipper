@@ -20,21 +20,23 @@ import java.awt.event.*;
 
 public class ZipperGui extends JFrame{
     protected static Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-    public static JPanel panel = new JPanel();
+    public static JPanel p1,p2, panel = new JPanel();
+    public static JTabbedPane jTabbedPane = new JTabbedPane();
+
     public ZipperGui(){
-        setSize(d.width/3,d.height/2);
+
         try{
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         }catch(Exception e){
             e.printStackTrace();
         }
 
+        jTabbedPane.add("Zipper",p1 = new Zipper());
+        jTabbedPane.add("UnZipper",p2 = new UnZipper());
 
-        panel.add(new Zipper(),BorderLayout.CENTER);
-        panel.setBorder(BorderFactory.createLineBorder(Color.blue,4));
-
-        add(panel,BorderLayout.CENTER);
-        Helper.SetBGColor s = new SetBGColor(Color.WHITE);
+        add(jTabbedPane,BorderLayout.CENTER);
+        Helper.SetBGColor s = new SetBGColor(Color.orange);
+        pack();
     }
 
     public static void main(String args[]){
@@ -44,7 +46,7 @@ public class ZipperGui extends JFrame{
                 obj.setVisible(true);
                 obj.setLocationRelativeTo(null);
                 obj.setIconImage(new ImageIcon("res//zipicon.png").getImage());
-                obj.setTitle("Zipper");
+                obj.setTitle("CreZip");
             }
         });
     }
