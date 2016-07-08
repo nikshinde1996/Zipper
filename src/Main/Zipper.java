@@ -99,7 +99,7 @@ public class Zipper extends JPanel implements PropertyChangeListener{
          ImageIcon imageIcon = new ImageIcon(new ImageIcon("res//zip3.png").getImage().getScaledInstance(200,180, Image.SCALE_DEFAULT));
          JLabel text,ilabel = new JLabel();
          ilabel.setIcon(imageIcon);
-         zipfile = new JButton(new ImageIcon(new ImageIcon("res//bimg2.png").getImage().getScaledInstance(155,80, Image.SCALE_DEFAULT)));
+         zipfile = new JButton(new ImageIcon(new ImageIcon("res//zipbutton.png").getImage().getScaledInstance(155,80, Image.SCALE_DEFAULT)));
          zipfile.setContentAreaFilled(false);zipfile.setFocusPainted(true);
 
          bpanel = new JPanel(new GridBagLayout());
