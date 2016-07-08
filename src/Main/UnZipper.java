@@ -45,6 +45,7 @@ public class UnZipper extends JPanel implements PropertyChangeListener{
     private static JTextArea statust = new JTextArea();
     private static net.lingala.zip4j.progress.ProgressMonitor progressMonitor = new ProgressMonitor();
     private static JScrollPane selectedfile;
+
     protected static String gaps = "    ";
     protected static String status1 = "File not Selected ";
     protected static String status2 = "File Item Selected ";
@@ -64,15 +65,17 @@ public class UnZipper extends JPanel implements PropertyChangeListener{
         add(uzurlpanel, new GBC(0,0).setInsets(5,5,3,5));
         add(uzbuttonpanel,new GBC(0,1).setFill(GBC.BOTH).setInsets(3));
         add(uzprogresspanel,new GBC(0,2).setFill(GBC.BOTH).setInsets(5,5,2,5));
-
     }
 
     public static void setUrlpanel(){
         uzurlpanel = new JPanel();
         uzurlpanel.add(selectedfile = new JScrollPane(uzselectedurl = new JTextArea(2,35),JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
-        uzselectedurl.setEditable(false);uzselectedurl.setToolTipText("Selcted file url");
+        uzurlpanel.add(uzselectFile = new JButton("..."));;
+
+        uzselectedurl.setEditable(false);
+        uzselectedurl.setToolTipText("Selcted file url");
         uzselectedurl.setBorder(BorderFactory.createLineBorder(Color.lightGray));
-        uzurlpanel.add(uzselectFile = new JButton("..."));
+
         uzselectFile.setPreferredSize(new Dimension(100,32));
 
         uzchooser = new JFileChooser();
@@ -92,7 +95,8 @@ public class UnZipper extends JPanel implements PropertyChangeListener{
 
     public static void setButtonPanel(){
         uzbuttonpanel = new JPanel(new BorderLayout());
-        uzimagep = new JPanel(new BorderLayout());uzimagep.setPreferredSize(new Dimension(200,150));
+        uzimagep = new JPanel(new BorderLayout());
+        uzimagep.setPreferredSize(new Dimension(200,150));
 
         String[] types = Zip4jParameter.getCompLevels();
 
@@ -171,27 +175,6 @@ public class UnZipper extends JPanel implements PropertyChangeListener{
         uzprogresspanel.setPreferredSize(new Dimension(ZipperGui.d.width/3-70,100));
         unzippingprogress.setPreferredSize(new Dimension(ZipperGui.d.width/3-70,20));
         uzprogresspanel.setBorder(BorderFactory.createEmptyBorder());
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-
-    }
-
-
-
-    public static void unzipfi(){
-        try{
-            ZipFile zipF = new ZipFile(zippath);
-            File inputfile = new File(filepath);
-            ZipParameters parameter1 = new ZipParameters();
-            zipF.getProgressMonitor();
-            parameter1.setCompressionLevel(Zip4jParameter.parameters.get(comp_level));
-            zipF.createZipFile(inputfile,parameter1);
-
-        }catch(Exception e){
-
-        }
     }
 }
 

@@ -3,20 +3,8 @@ package Main;
  * Created by Nikhil on 23-06-2016.
  */
 import Helper.*;
-
-import java.io.File;
-import java.util.Calendar;
-
-import com.sun.xml.internal.ws.api.server.Adapter;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.ZipParameters;
-import net.lingala.zip4j.util.Zip4jConstants;
-
-import java.io.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class ZipperGui extends JFrame{
     protected static Dimension d = Toolkit.getDefaultToolkit().getScreenSize();

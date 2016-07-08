@@ -2,17 +2,8 @@ package Main;
 /**
  * Created by Nikhil on 25-06-2016.
  */
-
-
-import net.lingala.zip4j.core.*;
 import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.model.*;
-import net.lingala.zip4j.progress.*;
 import net.lingala.zip4j.progress.ProgressMonitor;
-import net.lingala.zip4j.util.*;
-import com.sun.xml.internal.ws.api.server.Adapter;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 
@@ -21,16 +12,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.nio.file.Path;
-import java.util.zip.*;
 import java.io.*;
-import java.nio.*;
-import java.util.*;
-import java.lang.String.*;
-
-import static Helper.Zip4jParameter.*;
 
 public class Zipper extends JPanel implements PropertyChangeListener{
+
      public static JPanel urlpanel ,progresspanel,buttonpanel,imagep,bpanel;
      private static JButton selectFile,zipfile;
      private static JTextArea selectedurl ;
@@ -45,6 +30,7 @@ public class Zipper extends JPanel implements PropertyChangeListener{
      private static JTextArea statust = new JTextArea();
      private static net.lingala.zip4j.progress.ProgressMonitor progressMonitor = new ProgressMonitor();
      private static JScrollPane selectedfile;
+
      protected static String gaps = "    ";
      protected static String status1 = "File not Selected ";
      protected static String status2 = "File Item Selected ";
@@ -58,20 +44,20 @@ public class Zipper extends JPanel implements PropertyChangeListener{
           setUrlpanel();
           setButtonPanel();
           setProgressbar();
+
           setLayout(new GridBagLayout());
-
-         add(urlpanel, new GBC(0,0).setInsets(5,5,3,5));
-         add(buttonpanel,new GBC(0,1).setFill(GBC.BOTH).setInsets(3));
-         add(progresspanel,new GBC(0,2).setFill(GBC.BOTH).setInsets(5,5,2,5));
-
+          add(urlpanel, new GBC(0,0).setInsets(5,5,3,5));
+          add(buttonpanel,new GBC(0,1).setFill(GBC.BOTH).setInsets(3));
+          add(progresspanel,new GBC(0,2).setFill(GBC.BOTH).setInsets(5,5,2,5));
      }
 
      public static void setUrlpanel(){
          urlpanel = new JPanel();
          urlpanel.add(selectedfile = new JScrollPane(selectedurl = new JTextArea(2,35),JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+         urlpanel.add(selectFile = new JButton("..."));
+
          selectedurl.setEditable(false);selectedurl.setToolTipText("Selcted file url");
          selectedurl.setBorder(BorderFactory.createLineBorder(Color.lightGray));
-         urlpanel.add(selectFile = new JButton("..."));
          selectFile.setPreferredSize(new Dimension(100,32));
 
          chooser = new JFileChooser();
@@ -91,7 +77,8 @@ public class Zipper extends JPanel implements PropertyChangeListener{
 
      public static void setButtonPanel(){
          buttonpanel = new JPanel(new BorderLayout());
-         imagep = new JPanel(new BorderLayout());imagep.setPreferredSize(new Dimension(200,150));
+         imagep = new JPanel(new BorderLayout());
+         imagep.setPreferredSize(new Dimension(200,150));
 
          String[] types = Zip4jParameter.getCompLevels();
 
@@ -210,39 +197,19 @@ public class Zipper extends JPanel implements PropertyChangeListener{
 
      public static void setProgressbar(){
          progresspanel = new JPanel();
+
          statust.setPreferredSize(new Dimension(ZipperGui.d.width/3-70,50));
          statust.setBorder(BorderFactory.createTitledBorder("Status"));
          statust.setFont(new Font("serif",Font.CENTER_BASELINE,18));
          statust.setText(gaps+status1);statust.setEditable(false);
 
          zippingprogress.setValue(0);zippingprogress.setStringPainted(true);
+         zippingprogress.setPreferredSize(new Dimension(ZipperGui.d.width/3-70,20));
 
          progresspanel.add(new JScrollPane(statust),BorderLayout.NORTH);
          progresspanel.add(zippingprogress,BorderLayout.CENTER);
          progresspanel.setPreferredSize(new Dimension(ZipperGui.d.width/3-70,100));
-         zippingprogress.setPreferredSize(new Dimension(ZipperGui.d.width/3-70,20));
          progresspanel.setBorder(BorderFactory.createEmptyBorder());
      }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-
-    }
-
-
-
-    public static void zipfi(){
-        try{
-            ZipFile zipF = new ZipFile(zippath);
-            File inputfile = new File(filepath);
-            ZipParameters parameter1 = new ZipParameters();
-            zipF.getProgressMonitor();
-            parameter1.setCompressionLevel(Zip4jParameter.parameters.get(comp_level));
-            zipF.createZipFile(inputfile,parameter1);
-
-        }catch(Exception e){
-
-        }
-    }
 }
 
