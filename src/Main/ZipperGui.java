@@ -13,6 +13,7 @@ public class ZipperGui extends JFrame{
     protected static int FRAME_WTDTH,FRAME_HEIGHT;
 
     public ZipperGui(){
+
         setDimensions();
 
         setSize(new Dimension(FRAME_WTDTH,FRAME_HEIGHT));
@@ -20,19 +21,14 @@ public class ZipperGui extends JFrame{
         unzipPanel = new UnZipper();
         JTabbedPane jtb = new JTabbedPane();
         jtb.add("Zip",zipPanel);
-      //  jtb.add("Unzip",unzipPanel);
+        jtb.add("Unzip",unzipPanel);
         add(jtb);
         pack();
-
     }
 
     private static void setDimensions(){
         FRAME_WTDTH = d.width/3;
         FRAME_HEIGHT = d.height/2;
-    }
-
-    private static void makeGUI(){
-
     }
 
     public static void main(String args[]){
@@ -41,13 +37,10 @@ public class ZipperGui extends JFrame{
                 JFrame obj = new ZipperGui();
                 obj.setVisible(true);
                 obj.setTitle("CreZip");
-            //    obj.setResizable(false);
                 obj.setLocationRelativeTo(null);
             }
         });
     }
-
-
 
     class UnZipper extends JPanel{
         public UnZipper(){
