@@ -1,31 +1,38 @@
 package Main;
+
 /**
  * Created by Nikhil on 23-06-2016.
  */
-import Helper.*;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class ZipperGui extends JFrame{
     protected static Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-    public static JPanel p1,p2;
-    public static JTabbedPane jTabbedPane = new JTabbedPane();
+    protected static JPanel zipPanel,unzipPanel;
+    protected static int FRAME_WTDTH,FRAME_HEIGHT;
 
     public ZipperGui(){
-        setSize(new Dimension(d.width/3,d.height/2+50));
+        setDimensions();
 
-        try{
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        setSize(new Dimension(FRAME_WTDTH,FRAME_HEIGHT));
+        zipPanel = new Zipper();
+        unzipPanel = new UnZipper();
+        JTabbedPane jtb = new JTabbedPane();
+        jtb.add("Zip",zipPanel);
+      //  jtb.add("Unzip",unzipPanel);
+        add(jtb);
+        pack();
 
-        jTabbedPane.add("Zipper",p1 = new Zipper());
-        jTabbedPane.add("UnZipper",p2 = new UnZipper());
-        jTabbedPane.setPreferredSize(new Dimension(d.width/3-20,d.height+30));
+    }
 
-        add(jTabbedPane,BorderLayout.CENTER);
-        Helper.SetBGColor s = new SetBGColor(Color.orange);
+    private static void setDimensions(){
+        FRAME_WTDTH = d.width/3;
+        FRAME_HEIGHT = d.height/2;
+    }
+
+    private static void makeGUI(){
+
     }
 
     public static void main(String args[]){
@@ -33,10 +40,18 @@ public class ZipperGui extends JFrame{
             public void run(){
                 JFrame obj = new ZipperGui();
                 obj.setVisible(true);
-                obj.setLocationRelativeTo(null);
-                obj.setIconImage(new ImageIcon("res//zipicon.png").getImage());
                 obj.setTitle("CreZip");
+            //    obj.setResizable(false);
+                obj.setLocationRelativeTo(null);
             }
         });
+    }
+
+
+
+    class UnZipper extends JPanel{
+        public UnZipper(){
+
+        }
     }
 }

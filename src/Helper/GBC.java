@@ -1,10 +1,11 @@
 package Helper;
+
 /**
  * Created by Nikhil on 16-06-2016.
  */
-import javax.swing.*;
+
 import java.awt.*;
-import java.awt.event.*;
+
 public class GBC extends GridBagConstraints {
 
     public GBC(int gridx,int gridy){
